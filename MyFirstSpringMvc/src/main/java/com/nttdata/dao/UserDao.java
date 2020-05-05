@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import com.nttdata.model.User;
 @Service
@@ -29,8 +32,16 @@ public class UserDao {
 		return false;
 	}
 public String retriveLoggedinUser(){
-	return "abc@gmail.com";
-}
+	
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails)
+			return ((UserDetails) principal).getUsername();
+
+		return principal.toString();
+	}
+
 	public List<User> retrieveusers(String name) {
 		List<User> filteredusers = new ArrayList<User>();
 		for (User user : getUsers()) {
